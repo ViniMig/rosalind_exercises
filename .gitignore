@@ -24,6 +24,7 @@
 
 # Executables
 *.exe
+*.exe.*
 *.out
 *.app
 
@@ -31,8 +32,13 @@
 .vs/
 *.swp
 *~
+*.idb
+*.pdb
+*.ilk
 _ReSharper*
 *.log
+*.vcxproj
+*.vcxproj.*
 
 # Windows
 *.user.*
