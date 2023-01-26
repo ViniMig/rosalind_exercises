@@ -30,3 +30,24 @@
 *.exe
 *.out
 *.app
+
+# Build directories and binary files
+build/
+out/
+cmake-build-*/
+
+# IDE files
+.vs/
+*.swp
+*~
+_ReSharper*
+*.log
+
+# OS Generated Files
+._*
+.Trashes
+.Trash-*
+$RECYCLE.BIN/
+.TemporaryItems
+ehthumbs.db
+Thumbs.db
