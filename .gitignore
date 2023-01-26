@@ -16,10 +16,6 @@
 *.dylib
 *.dll
 
-# Fortran module files
-*.mod
-*.smod
-
 # Compiled Static libraries
 *.lai
 *.la
@@ -31,11 +27,6 @@
 *.out
 *.app
 
-# Build directories and binary files
-build/
-out/
-cmake-build-*/
-
 # IDE files
 .vs/
 *.swp
@@ -43,11 +34,16 @@ cmake-build-*/
 _ReSharper*
 *.log
 
-# OS Generated Files
-._*
-.Trashes
-.Trash-*
-$RECYCLE.BIN/
-.TemporaryItems
-ehthumbs.db
-Thumbs.db
+# Windows
+*.user.*
+*.tlog
+*.cache
+
+# ignore compilation files
+build/*
+/bin
+
+# build dirs
+/build*
+/*.lnk
+/win*
