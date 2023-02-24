@@ -3,12 +3,12 @@
 #include <string.h>
 #include <unordered_map>
 #include <fstream>
-#include "ReadFasta.h"
+#include "FastaTools.h"
 
 using namespace std;
 
 //constructor
-ReadFasta::ReadFasta(string fpath)
+FastaTools::FastaTools(string fpath)
 	:fastaHMap()
 {
 	unordered_map<string, string> fastaMap;
@@ -37,25 +37,26 @@ ReadFasta::ReadFasta(string fpath)
 			i++;
 		}
 	}
+	fastaMap[currentID] = currentSeq; //add the last id and sequence of the file
 	readFileStream.close();
 
 	fastaHMap = fastaMap;
 }
 
 //methods
-void ReadFasta::ShowFastaIds() {
+void FastaTools::ShowFastaIds() {
 	for (auto i = fastaHMap.begin(); i != fastaHMap.end(); i++) {
 		cout << i->first << ";\n";
 	}
 }
 
-void ReadFasta::ShowFastaSeqs() {
+void FastaTools::ShowFastaSeqs() {
 	for (auto i = fastaHMap.begin(); i != fastaHMap.end(); i++) {
 		cout << i->second << ";\n";
 	}
 }
 
-vector<string> ReadFasta::GetFastaIds() {
+vector<string> FastaTools::GetFastaIds() {
 
 	vector<string> fastaIds(fastaHMap.size());
 
@@ -66,13 +67,40 @@ vector<string> ReadFasta::GetFastaIds() {
 	return fastaIds;
 }
 
-vector<string> ReadFasta::GetFastaSeqs() {
+vector<string> FastaTools::GetFastaSeqs() {
 
-	vector<string> fastaSeqs(fastaHMap.size());
+	vector<string> fastaSeqs;
 
 	for (auto i = fastaHMap.begin(); i != fastaHMap.end(); i++) {
 		fastaSeqs.push_back(i->second);
 	}
 
 	return fastaSeqs;
+}
+
+unordered_map<char, int> FastaTools::countNucs(string seq) {
+	unordered_map<char, int> nucCount;
+	nucCount['A'] = 0;
+	nucCount['C'] = 0;
+	nucCount['T'] = 0;
+	nucCount['G'] = 0;
+
+	cout	<< "Sequence: " << seq << endl
+			<< "Freqs:\n";
+	for (char nuc : seq) {
+		if (nuc == 'A')
+			nucCount['A']++;
+		else if (nuc == 'C')
+			nucCount['C']++;
+		else if (nuc == 'T')
+			nucCount['T']++;
+		else if (nuc == 'G')
+			nucCount['G']++;
+		else {
+			cout << "Invalid nucleotide. This is an invalid sequence, check for errors!" << endl;
+			break;
+		}
+	}
+
+	return nucCount;
 }

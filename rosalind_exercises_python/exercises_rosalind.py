@@ -44,7 +44,7 @@ def count_nuclts(s:str) -> dict:
     """
     Returns the number of nucleotides in a given sequence.
     """
-    return dict(Counter(s))
+    return Counter(s)
 
 def transcribe_dna(t: str) -> str:
     """
@@ -156,6 +156,7 @@ def consensus_profile(fp: str) -> tuple:
     Given set of sequences in fasta format.
     """
     fastaDic: dict = readFasta(fp)
+    num_seqs = len(fastaDic.values())
     seqs_matrix = np.array(list(list(fastaDic.values())[0]))
     for value in fastaDic.values():
         seqs_matrix = np.vstack((seqs_matrix, np.array(list(value))))
@@ -167,9 +168,14 @@ def consensus_profile(fp: str) -> tuple:
     consensus: str = ''.join(seqs_df[column].mode()[0] for column in seqs_df.columns)
 
     aa_counts = seqs_df.apply(pd.value_counts, axis = 0).fillna(0)
-    aa_counts = np.matrix(aa_counts)
+    aa_counts = np.matrix(aa_counts) #ACGT -> row for each nuc
+    aa_entropy = aa_counts / num_seqs
+    aa_entropy = np.multiply(aa_entropy, np.where(aa_entropy != 0, np.log2(aa_entropy), 0))
+    aa_entropy = np.sum(aa_entropy.sum(axis=0) * -1)
     np.savetxt("counts_matrix.txt", aa_counts, fmt='%d',)
-    return(consensus, aa_counts)
+    return(consensus, aa_counts, aa_entropy)
+
+consensus_profile("C:/Users/vinic/OneDrive/Documentos/Rosalind exercises/MARIUSHKA_EXAMPLE.txt")
 
 # Initial dictionary for mortal_rabbit function.
 # Month 1 and Month 2 assume the rabbits are born and need

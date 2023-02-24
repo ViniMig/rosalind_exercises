@@ -1,7 +1,8 @@
 #include <iostream>
 #include <string>
 #include <fstream>
-#include "ReadFasta.h"
+#include <unordered_map>
+#include "FastaTools.h"
 
 using namespace std;
 
@@ -19,11 +20,15 @@ int main()
         checkFile.open(fPath);
     }
     checkFile.close();
-
+    
     //Create an instance of ReadFasta class and print the sequence ids and the sequences
-    /*ReadFasta fasta(fPath);
-    fasta.ShowFastaIds();
-    fasta.ShowFastaSeqs();*/
+    FastaTools fasta(fPath);
+    vector<string> seqs = fasta.GetFastaSeqs();
+    string seq = seqs[0];
+    unordered_map<char, int> counts = fasta.countNucs(seq);
+
+    for (auto i : counts)
+        cout << i.first << ": " << i.second << endl;
 
     return 0;
 }
