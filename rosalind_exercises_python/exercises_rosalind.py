@@ -175,8 +175,6 @@ def consensus_profile(fp: str) -> tuple:
     np.savetxt("counts_matrix.txt", aa_counts, fmt='%d',)
     return(consensus, aa_counts, aa_entropy)
 
-consensus_profile("C:/Users/vinic/OneDrive/Documentos/Rosalind exercises/MARIUSHKA_EXAMPLE.txt")
-
 # Initial dictionary for mortal_rabbit function.
 # Month 1 and Month 2 assume the rabbits are born and need
 # to mature for 1 month. The value for 0 is for the fact
