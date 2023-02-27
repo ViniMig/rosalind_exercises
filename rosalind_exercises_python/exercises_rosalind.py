@@ -40,7 +40,7 @@ def readFasta(f: str) -> dict:
     
     return fastaSeqs
 
-def count_nuclts(s:str) -> dict:
+def count_nuclts(s:str) -> dict[str, int]:
     """
     Returns the number of nucleotides in a given sequence.
     """
@@ -69,7 +69,7 @@ def rabbit_seq(n: int, k:int) -> int:
     else:
         return ((k * rabbit_seq(n-2,k)) + rabbit_seq(n-1,k))
 
-def highest_gc_content(fp: str) -> tuple:
+def highest_gc_content(fp: str) -> tuple[str, float]:
     """
     Returns the Sequence ID and the GC content in percentage of the
     Given 'fp' fasta file.

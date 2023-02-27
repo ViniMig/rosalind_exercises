@@ -44,21 +44,25 @@ FastaTools::FastaTools(string fpath)
 }
 
 //methods
+
+// Display IDs of the fasta sequences on the console
 void FastaTools::ShowFastaIds() {
 	for (auto i = fastaHMap.begin(); i != fastaHMap.end(); i++) {
 		cout << i->first << ";\n";
 	}
 }
 
+// Display sequences present in the fasta file on the console
 void FastaTools::ShowFastaSeqs() {
 	for (auto i = fastaHMap.begin(); i != fastaHMap.end(); i++) {
 		cout << i->second << ";\n";
 	}
 }
 
+// Return a vector of the IDs
 vector<string> FastaTools::GetFastaIds() {
 
-	vector<string> fastaIds(fastaHMap.size());
+	vector<string> fastaIds;
 
 	for (auto i = fastaHMap.begin(); i != fastaHMap.end(); i++) {
 		fastaIds.push_back(i->first);
@@ -67,6 +71,7 @@ vector<string> FastaTools::GetFastaIds() {
 	return fastaIds;
 }
 
+// Return a vector of the Sequences - can be used for further analysis.
 vector<string> FastaTools::GetFastaSeqs() {
 
 	vector<string> fastaSeqs;
@@ -78,6 +83,7 @@ vector<string> FastaTools::GetFastaSeqs() {
 	return fastaSeqs;
 }
 
+// Return a dictionary with the counts as values for each of the 4 nucleotides present.
 unordered_map<char, int> FastaTools::countNucs(string seq) {
 	unordered_map<char, int> nucCount;
 	nucCount['A'] = 0;
@@ -85,8 +91,6 @@ unordered_map<char, int> FastaTools::countNucs(string seq) {
 	nucCount['T'] = 0;
 	nucCount['G'] = 0;
 
-	cout	<< "Sequence: " << seq << endl
-			<< "Freqs:\n";
 	for (char nuc : seq) {
 		if (nuc == 'A')
 			nucCount['A']++;
@@ -103,4 +107,80 @@ unordered_map<char, int> FastaTools::countNucs(string seq) {
 	}
 
 	return nucCount;
+}
+
+// Return the RNA sequence string of the transcribed DNA.
+string FastaTools::transcribeDNA(string seq) {
+	string tSeq = "";
+
+	for (char nuc : seq) {
+		if (nuc == 'T')
+			nuc = 'U';
+
+		tSeq += nuc;
+	}
+
+	return tSeq;
+}
+
+// Return the reverse complement sequence of the input sequence.
+string FastaTools::revComplDNA(string seq) {
+	string revCompSeq = "";
+
+	for (int i = seq.size() - 1; i >= 0; i--) {
+		switch (seq[i]) {
+		case 'A':
+			revCompSeq += 'T';
+			break;
+		case 'T':
+			revCompSeq += 'A';
+			break;
+		case 'C':
+			revCompSeq += 'G';
+			break;
+		case 'G':
+			revCompSeq += 'C';
+			break;
+		default:
+			return "Invalid Sequence! Non nucleotide present: " + seq[i];
+		}
+	}
+
+	return revCompSeq;
+}
+
+//Return ID of the sequence with the highest GC content in te fasta file, and the content in %.
+pair<string, float> FastaTools::HighestGC() {
+	pair <string, float> highestGC;
+	highestGC.first = "";
+	highestGC.second = 0;
+	vector<string> fastaIds = GetFastaIds();
+	vector<string> sequences = GetFastaSeqs();
+
+	for (int i = 0; i < sequences.size(); i++) {
+		unordered_map<char, int> nucCount = countNucs(sequences[i]);
+		float currContent = ((nucCount['C'] + nucCount['G']) / (sequences[i].size() * 1.0F)) * 100;
+		if (currContent > highestGC.second) {
+			highestGC.first = fastaIds[i];
+			highestGC.second = currContent;
+		}
+	}
+	return highestGC;
+}
+
+// Return the hamming distance between any 2 sequences of same size.
+int FastaTools::HammingDist(string seq1, string seq2) {
+	int hamm_dist = 0;
+
+	if (seq1.size() != seq2.size()) {
+		cout << "Error! Sequences with different sizes!" << endl;
+		return -1;
+	}
+
+	for (int i = 0; i < seq1.size(); i++) {
+		if (seq1[i] != seq2[i])
+			hamm_dist++;
+	}
+
+	return hamm_dist;
 }
