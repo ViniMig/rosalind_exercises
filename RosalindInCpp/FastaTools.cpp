@@ -3,6 +3,7 @@
 #include <string.h>
 #include <unordered_map>
 #include <fstream>
+#include <regex>
 #include "FastaTools.h"
 
 using namespace std;
@@ -198,4 +199,18 @@ string FastaTools::TranslateRNA(string seq, unordered_map<string, string> codons
 	}
 	
 	return rna_seq;
+}
+
+//Return list of positions where motif is present in the sequence
+vector<int> FastaTools::FindMotif(string seq, string motif) {
+	vector<int> motif_pos;
+
+	string::size_type start_pos = 0;
+	while (string::npos != (start_pos = seq.find(motif, start_pos)))
+	{
+		motif_pos.push_back(start_pos + 1); //adding one because of 0 index.
+		start_pos++;
+	}
+
+	return motif_pos;
 }
