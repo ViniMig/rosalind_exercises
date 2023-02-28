@@ -9,7 +9,7 @@ using namespace std;
 
 //constructor
 FastaTools::FastaTools(string fpath)
-	:fastaHMap()
+	:fastaHMap{}
 {
 	unordered_map<string, string> fastaMap;
 	int i = 0;
@@ -110,7 +110,7 @@ unordered_map<char, int> FastaTools::countNucs(string seq) {
 }
 
 // Return the RNA sequence string of the transcribed DNA.
-string FastaTools::transcribeDNA(string seq) {
+string FastaTools::TranscribeDNA(string seq) {
 	string tSeq = "";
 
 	for (char nuc : seq) {
@@ -124,7 +124,7 @@ string FastaTools::transcribeDNA(string seq) {
 }
 
 // Return the reverse complement sequence of the input sequence.
-string FastaTools::revComplDNA(string seq) {
+string FastaTools::RevComplDNA(string seq) {
 	string revCompSeq = "";
 
 	for (int i = seq.size() - 1; i >= 0; i--) {
@@ -183,4 +183,19 @@ int FastaTools::HammingDist(string seq1, string seq2) {
 	}
 
 	return hamm_dist;
+}
+
+// Return the translated sequence until the stop codon in a given sequence.
+string FastaTools::TranslateRNA(string seq, unordered_map<string, string> codons) {
+	string rna_seq = "";
+
+	for (int i = 0; i < seq.size(); i+=3) {
+		string amino_acid = codons[seq.substr(i, 3)];
+		if (amino_acid == "Stop")
+			break;
+
+		rna_seq += amino_acid;
+	}
+	
+	return rna_seq;
 }

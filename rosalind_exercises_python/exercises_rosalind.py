@@ -119,7 +119,7 @@ def dominant_allele(k: int, m: int, n: int) -> float:
 # TTT   C
 # GGG   D
 prot_dic: dict = {}
-with open('codon_tab.txt', 'r') as prot_file:
+with open('rosalind_exercises_python/codon_tab.txt', 'r') as prot_file:
     codons = prot_file.readlines()
     for codon in codons:
         key_val: list = codon.rstrip().split(" ")
@@ -133,7 +133,7 @@ def translate_rna(s: str) -> str:
     It does not take into account the Start Codon
     """
     prot_seq: str = ""
-    mrna_reads = re.findall("[ACTG]{3}",s)
+    mrna_reads = re.findall("[ACUG]{3}",s)
     for mrna_codon in mrna_reads:
         if prot_dic[mrna_codon] == "Stop":
             break
