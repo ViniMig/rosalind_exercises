@@ -10,7 +10,7 @@ using namespace std;
 
 //constructor
 FastaTools::FastaTools(string fpath)
-	:fastaHMap{}
+	:fasta_h_map_{}
 {
 	unordered_map<string, string> fastaMap;
 	int i = 0;
@@ -41,21 +41,21 @@ FastaTools::FastaTools(string fpath)
 	fastaMap[currentID] = currentSeq; //add the last id and sequence of the file
 	readFileStream.close();
 
-	fastaHMap = fastaMap;
+	fasta_h_map_ = fastaMap;
 }
 
 //methods
 
 // Display IDs of the fasta sequences on the console
 void FastaTools::ShowFastaIds() {
-	for (auto i = fastaHMap.begin(); i != fastaHMap.end(); i++) {
+	for (auto i = fasta_h_map_.begin(); i != fasta_h_map_.end(); i++) {
 		cout << i->first << ";\n";
 	}
 }
 
 // Display sequences present in the fasta file on the console
 void FastaTools::ShowFastaSeqs() {
-	for (auto i = fastaHMap.begin(); i != fastaHMap.end(); i++) {
+	for (auto i = fasta_h_map_.begin(); i != fasta_h_map_.end(); i++) {
 		cout << i->second << ";\n";
 	}
 }
@@ -65,7 +65,7 @@ vector<string> FastaTools::GetFastaIds() {
 
 	vector<string> fastaIds;
 
-	for (auto i = fastaHMap.begin(); i != fastaHMap.end(); i++) {
+	for (auto i = fasta_h_map_.begin(); i != fasta_h_map_.end(); i++) {
 		fastaIds.push_back(i->first);
 	}
 
@@ -77,7 +77,7 @@ vector<string> FastaTools::GetFastaSeqs() {
 
 	vector<string> fastaSeqs;
 
-	for (auto i = fastaHMap.begin(); i != fastaHMap.end(); i++) {
+	for (auto i = fasta_h_map_.begin(); i != fasta_h_map_.end(); i++) {
 		fastaSeqs.push_back(i->second);
 	}
 
