@@ -2,7 +2,7 @@
 #include <string>
 #include <fstream>
 #include <unordered_map>
-#include "FastaTools.h"
+#include "fasta_tools.h"
 
 using namespace std;
 

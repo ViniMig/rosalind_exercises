@@ -4,7 +4,7 @@
 #include <unordered_map>
 #include <fstream>
 #include <regex>
-#include "FastaTools.h"
+#include "fasta_tools.h"
 
 using namespace std;
 
