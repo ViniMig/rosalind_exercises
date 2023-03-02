@@ -9,39 +9,39 @@
 using namespace std;
 
 //constructor
-FastaTools::FastaTools(string fpath)
+FastaTools::FastaTools(string f_path)
 	:fasta_h_map_{}
 {
-	unordered_map<string, string> fastaMap;
+	unordered_map<string, string> fasta_map;
 	int i = 0;
-	string currentLine;
-	string currentSeq = "";
-	string currentID;
-	bool isStart = true;
+	string current_line;
+	string current_seq = "";
+	string current_id;
+	bool is_start = true;
 
-	ifstream readFileStream(fpath);
+	ifstream readFileStream(f_path);
 
-	while (getline(readFileStream, currentLine)) {
-		if (currentLine[0] == '>') {
-			if (isStart) {
-				isStart = false;
+	while (getline(readFileStream, current_line)) {
+		if (current_line[0] == '>') {
+			if (is_start) {
+				is_start = false;
 			}
 			else {
-				fastaMap[currentID] = currentSeq;
-				currentSeq = "";
+				fasta_map[current_id] = current_seq;
+				current_seq = "";
 			}
 			i = 0;
-			currentID = currentLine.substr(1, currentLine.size() - 1);
+			current_id = current_line.substr(1, current_line.size() - 1);
 		}
 		else {
-			currentSeq += currentLine;
+			current_seq += current_line;
 			i++;
 		}
 	}
-	fastaMap[currentID] = currentSeq; //add the last id and sequence of the file
+	fasta_map[current_id] = current_seq; //add the last id and sequence of the file
 	readFileStream.close();
 
-	fasta_h_map_ = fastaMap;
+	fasta_h_map_ = fasta_map;
 }
 
 //methods
@@ -63,123 +63,123 @@ void FastaTools::ShowFastaSeqs() {
 // Return a vector of the IDs
 vector<string> FastaTools::GetFastaIds() {
 
-	vector<string> fastaIds;
+	vector<string> fasta_ids;
 
 	for (auto i = fasta_h_map_.begin(); i != fasta_h_map_.end(); i++) {
-		fastaIds.push_back(i->first);
+		fasta_ids.push_back(i->first);
 	}
 
-	return fastaIds;
+	return fasta_ids;
 }
 
 // Return a vector of the Sequences - can be used for further analysis.
 vector<string> FastaTools::GetFastaSeqs() {
 
-	vector<string> fastaSeqs;
+	vector<string> fasta_seqs;
 
 	for (auto i = fasta_h_map_.begin(); i != fasta_h_map_.end(); i++) {
-		fastaSeqs.push_back(i->second);
+		fasta_seqs.push_back(i->second);
 	}
 
-	return fastaSeqs;
+	return fasta_seqs;
 }
 
 // Return a dictionary with the counts as values for each of the 4 nucleotides present.
 unordered_map<char, int> FastaTools::countNucs(string seq) {
-	unordered_map<char, int> nucCount;
-	nucCount['A'] = 0;
-	nucCount['C'] = 0;
-	nucCount['T'] = 0;
-	nucCount['G'] = 0;
+	unordered_map<char, int> nuc_count;
+	nuc_count['A'] = 0;
+	nuc_count['C'] = 0;
+	nuc_count['T'] = 0;
+	nuc_count['G'] = 0;
 
 	for (char nuc : seq) {
 		if (nuc == 'A')
-			nucCount['A']++;
+			nuc_count['A']++;
 		else if (nuc == 'C')
-			nucCount['C']++;
+			nuc_count['C']++;
 		else if (nuc == 'T')
-			nucCount['T']++;
+			nuc_count['T']++;
 		else if (nuc == 'G')
-			nucCount['G']++;
+			nuc_count['G']++;
 		else {
 			cout << "Invalid nucleotide. This is an invalid sequence, check for errors!" << endl;
 			break;
 		}
 	}
 
-	return nucCount;
+	return nuc_count;
 }
 
 // Return the RNA sequence string of the transcribed DNA.
 string FastaTools::TranscribeDNA(string seq) {
-	string tSeq = "";
+	string transcr_seq = "";
 
 	for (char nuc : seq) {
 		if (nuc == 'T')
 			nuc = 'U';
 
-		tSeq += nuc;
+		transcr_seq += nuc;
 	}
 
-	return tSeq;
+	return transcr_seq;
 }
 
 // Return the reverse complement sequence of the input sequence.
 string FastaTools::RevComplDNA(string seq) {
-	string revCompSeq = "";
+	string rev_compl_seq = "";
 
 	for (int i = seq.size() - 1; i >= 0; i--) {
 		switch (seq[i]) {
 		case 'A':
-			revCompSeq += 'T';
+			rev_compl_seq += 'T';
 			break;
 		case 'T':
-			revCompSeq += 'A';
+			rev_compl_seq += 'A';
 			break;
 		case 'C':
-			revCompSeq += 'G';
+			rev_compl_seq += 'G';
 			break;
 		case 'G':
-			revCompSeq += 'C';
+			rev_compl_seq += 'C';
 			break;
 		default:
 			return "Invalid Sequence! Non nucleotide present: " + seq[i];
 		}
 	}
 
-	return revCompSeq;
+	return rev_compl_seq;
 }
 
 //Return ID of the sequence with the highest GC content in te fasta file, and the content in %.
 pair<string, float> FastaTools::HighestGC() {
-	pair <string, float> highestGC;
-	highestGC.first = "";
-	highestGC.second = 0;
-	vector<string> fastaIds = GetFastaIds();
+	pair <string, float> high_GC_cont;
+	high_GC_cont.first = "";
+	high_GC_cont.second = 0;
+	vector<string> fasta_ids = GetFastaIds();
 	vector<string> sequences = GetFastaSeqs();
 
 	for (int i = 0; i < sequences.size(); i++) {
-		unordered_map<char, int> nucCount = countNucs(sequences[i]);
-		float currContent = ((nucCount['C'] + nucCount['G']) / (sequences[i].size() * 1.0F)) * 100;
-		if (currContent > highestGC.second) {
-			highestGC.first = fastaIds[i];
-			highestGC.second = currContent;
+		unordered_map<char, int> nuc_count = countNucs(sequences[i]);
+		float curr_content = ((nuc_count['C'] + nuc_count['G']) / (sequences[i].size() * 1.0F)) * 100;
+		if (curr_content > high_GC_cont.second) {
+			high_GC_cont.first = fasta_ids[i];
+			high_GC_cont.second = curr_content;
 		}
 	}
-	return highestGC;
+	return high_GC_cont;
 }
 
 // Return the hamming distance between any 2 sequences of same size.
-int FastaTools::HammingDist(string seq1, string seq2) {
+int FastaTools::HammingDist(string seq_1, string seq_2) {
 	int hamm_dist = 0;
 
-	if (seq1.size() != seq2.size()) {
+	if (seq_1.size() != seq_2.size()) {
 		cout << "Error! Sequences with different sizes!" << endl;
 		return -1;
 	}
 
-	for (int i = 0; i < seq1.size(); i++) {
-		if (seq1[i] != seq2[i])
+	for (int i = 0; i < seq_1.size(); i++) {
+		if (seq_1[i] != seq_2[i])
 			hamm_dist++;
 	}
 

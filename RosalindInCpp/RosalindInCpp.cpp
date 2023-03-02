@@ -21,21 +21,21 @@ int main()
 // test tools by calling them and comparing against the Python code which is already verified.
 void TestTool() {
 
-    string fPath;
+    string f_path;
 
     cout << "File path (without \"\"): " << endl; //ask for file path
-    getline(cin, fPath);
-    ifstream checkFile(fPath);
+    getline(cin, f_path);
+    ifstream checkFile(f_path);
 
     while (!checkFile.is_open()) { //test if file path is correct
-        cout << "Error with file path: " << fPath << "\nEnter new file path:\n";
-        getline(cin, fPath);
-        checkFile.open(fPath);
+        cout << "Error with file path: " << f_path << "\nEnter new file path:\n";
+        getline(cin, f_path);
+        checkFile.open(f_path);
     }
     checkFile.close();
 
     //Create an instance of ReadFasta class and print the sequence ids and the sequences
-    FastaTools fasta(fPath);
+    FastaTools fasta(f_path);
     vector<string> seqs = fasta.GetFastaSeqs();
     string seq = seqs[0];
     unordered_map<char, int> counts = fasta.countNucs(seq);
@@ -64,11 +64,11 @@ void TestTool() {
 
 unordered_map<string, string> ReadCodonTable() {
     unordered_map<string, string> codons;
-    string currentLine;
+    string current_line;
     ifstream readFileStream("../rosalind_exercises_python/codon_tab.txt");
 
-    while (getline(readFileStream, currentLine)) {
-        codons[currentLine.substr(0, 3)] = currentLine.substr(4, 4);
+    while (getline(readFileStream, current_line)) {
+        codons[current_line.substr(0, 3)] = current_line.substr(4, 4);
     }
     readFileStream.close();
 
